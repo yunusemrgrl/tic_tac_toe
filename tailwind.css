@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+
+@layer base {
+    html, body {
+        font-family: 'Silkscreen', cursive;
+        @apply antialiased bg-gray-300
+    }
+}
+
