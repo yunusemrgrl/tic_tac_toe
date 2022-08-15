@@ -8,12 +8,32 @@ export const gameSlice = createSlice({
       ['', '', ''],
       ['', '', ''],
     ],
+    isShowModal: true,
     isPlayerOne: true,
     isWinner: null,
-    players: ['X', 'O'],
-    completed: { row: null, column: null, diagonal: null },
+    announceWinner: null,
+    playersName: [
+      {
+        firstplayer: { name: 'First Player', selection: 'X', score: 0 },
+      },
+      {
+        secondplayer: { name: 'Second Player', selection: 'O', score: 0 },
+      },
+    ],
+    theWinner: null,
+    isGameFinish: false,
+    getScoreTable: false,
+    selection: ['X', 'O'],
   },
   reducers: {
+    setPlayerName: (state, action) => {
+      const { firstPlayerName, secondPlayerName } = action.payload;
+      state.playersName[0].firstplayer.name = firstPlayerName.toUpperCase();
+      state.playersName[1].secondplayer.name = secondPlayerName.toUpperCase();
+    },
+    startGame: (state, action) => {
+      state.isShowModal = action.payload;
+    },
     clickEvent: (state, action) => {
       if (state.isWinner !== null) return;
       const { row, column } = action.payload;
@@ -36,36 +56,55 @@ export const gameSlice = createSlice({
         `${state.board[1][1]}`,
         `${state.board[2][0]}`,
       ];
-      state.players.forEach((player) => {
+      state.selection.forEach((player) => {
         if (diagonal1.every((cell) => cell === player)) {
-          state.isWinner = `Player ${player} Winner`;
+          state.isWinner = player;
           return;
         } else if (diagonal2.every((cell) => cell === player)) {
-          state.isWinner = `Player ${player} Winner`;
+          state.isWinner = player;
           return;
         } else if (state.board.flat().every((cell) => cell !== '')) {
           state.isWinner = 'Draw';
           return;
         }
       });
-      state.players.forEach((player) => {
+      state.selection.forEach((player) => {
         state.board.forEach((row, rowIndex) => {
           if (row.every((item) => item === player)) {
-            console.log(rowIndex);
-            state.isWinner = `Player ${player} Winner`;
+            state.isWinner = player;
           }
           row.forEach((column, colIndex) => {
             const columnArr = state.board.map(
               (board) => board[rowIndex][colIndex],
             );
             if (columnArr.every((item) => item === player)) {
-              state.isWinner = `Player ${player} Winner`;
+              state.isWinner = player;
             }
           });
         });
       });
+      if (state.isWinner === null) return;
+      if (state.isWinner === state.playersName[0].firstplayer.selection) {
+        state.announceWinner = state.playersName[0].firstplayer.name;
+        state.playersName[0].firstplayer.score++;
+      } else if (
+        state.isWinner === state.playersName[1].secondplayer.selection
+      ) {
+        state.announceWinner = state.playersName[1].secondplayer.name;
+        state.playersName[1].secondplayer.score++;
+      } else {
+        state.announceWinner = 'DRAW';
+      }
+      localStorage.setItem('score', JSON.stringify(state.playersName));
+      if (
+        state.playersName[0].firstplayer.score > 2 ||
+        state.playersName[1].secondplayer.score > 2
+      ) {
+        state.getScoreTable = true;
+        state.isGameFinish = true;
+      }
     },
-    restartGame: (state, action) => {
+    playAgain: (state, action) => {
       state.board = [
         ['', '', ''],
         ['', '', ''],
@@ -73,8 +112,38 @@ export const gameSlice = createSlice({
       ];
       state.isPlayerOne = true;
       state.isWinner = null;
+      state.announceWinner = null;
+    },
+    restartGame: (state, action) => {
+      state.board = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', ''],
+      ];
+      state.playersName = [
+        {
+          firstplayer: { name: 'First Player', selection: 'X', score: 0 },
+        },
+        {
+          secondplayer: { name: 'Second Player', selection: 'O', score: 0 },
+        },
+      ];
+      state.isPlayerOne = true;
+      state.isWinner = null;
+      state.announceWinner = null;
+      state.getScoreTable = false;
+      state.isGameFinish = false;
+      state.isShowModal = true;
+      localStorage.removeItem('score');
     },
   },
 });
 
-export const { clickEvent, restartGame, checkStatus } = gameSlice.actions;
+export const {
+  clickEvent,
+  playAgain,
+  checkStatus,
+  startGame,
+  setPlayerName,
+  restartGame,
+} = gameSlice.actions;
