@@ -31,8 +31,7 @@ function PlayMoreModal() {
                 d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
               ></path>
             </svg>
-            <h3 className='text-lg font-normal text-white'>Game Over</h3>
-            <h3></h3>
+            <h3 className='text-2xl font-semibold text-red-600 '>Game Over</h3>
             <div className='py-6 px-4 whitespace-nowrap flex justify-center flex-col gap-y-2 md:flex-row md:gap-x-10  '>
               {players.map((player, index) =>
                 Object.values(player).map((item) => (

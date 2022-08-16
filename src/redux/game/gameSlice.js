@@ -28,6 +28,13 @@ export const gameSlice = createSlice({
   reducers: {
     setPlayerName: (state, action) => {
       const { firstPlayerName, secondPlayerName } = action.payload;
+      if (
+        firstPlayerName === undefined ||
+        secondPlayerName === undefined ||
+        firstPlayerName.trim() === '' ||
+        secondPlayerName.trim() === ''
+      )
+        return;
       state.playersName[0].firstplayer.name = firstPlayerName.toUpperCase();
       state.playersName[1].secondplayer.name = secondPlayerName.toUpperCase();
     },

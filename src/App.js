@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import Content from './components/Content';
-import Modal from './components/LoginModal';
+import LoginModal from './components/LoginModal';
 import ScoreBoard from './components/ScoreBoard';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   return (
     <div className='flex flex-col '>
       {!isShowModal && <ScoreBoard />}
-      <Modal />
+      {isShowModal && <LoginModal />}
       <Content />
     </div>
   );

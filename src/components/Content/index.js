@@ -7,16 +7,24 @@ import PlayMoreModal from '../PlayMoreModal';
 import ScoreTable from '../ScoreTable';
 function Content() {
   const dispatch = useDispatch();
+
   const board = useSelector((state) => state.game.board);
   const isGameFinish = useSelector((state) => state.game.isGameFinish);
   const scoreTable = useSelector((state) => state.game.getScoreTable);
+  const isShowModal = useSelector((state) => state.game.isShowModal);
+
   const showAction = (row, column) => {
     dispatch(clickEvent({ row, column }));
     dispatch(checkStatus());
   };
 
   return (
-    <div className='container mx-auto flex items-center justify-center h-[calc(100vh_-_80px)] w-screen'>
+    <div
+      className={
+        'container mx-auto flex items-center justify-center w-screen' +
+        (isShowModal ? ' h-screen' : ' h-[calc(100vh_-_80px)]')
+      }
+    >
       <div className='grid grid-cols-3 flex-1 place-items-center gap-1    mx-6 lg:mx-28 '>
         {board.map((row, rowIndex) =>
           row.map((column, colIndex) => (
